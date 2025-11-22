@@ -1,0 +1,109 @@
+{%- liquid
+  assign collection = collections[section.settings.collection] | default: collections.all
+  assign products = collection.products
+  assign limit = section.settings.products_to_show | default: 10
+-%}
+
+<section class="relative z-20 py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-5xl md:text-7xl font-black mb-12 tracking-tighter">
+      {{ section.settings.heading | default: "THE DROP" }}
+      {%- if section.settings.heading_accent != blank -%}
+        <span class="text-purple-500">{{ section.settings.heading_accent }}</span>
+      {%- endif -%}
+    </h2>
+    
+    {%- if products.size > 0 -%}
+      <!-- Horizontal Drag-Scroll Carousel -->
+      <div 
+        class="drag-scroll flex gap-6 overflow-x-auto pb-6 scrollbar-hide"
+        style="scroll-behavior: smooth;"
+      >
+        {%- for product in products limit: limit -%}
+          {% render 'product-card', product: product %}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="text-center py-20">
+        <p class="text-2xl text-gray-500">No products found</p>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  // Drag scroll functionality
+  (function() {
+    const carousel = document.querySelector('.drag-scroll');
+    if (!carousel) return;
+    
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    
+    carousel.addEventListener('mousedown', (e) => {
+      isDown = true;
+      carousel.style.cursor = 'grabbing';
+      startX = e.pageX - carousel.offsetLeft;
+      scrollLeft = carousel.scrollLeft;
+    });
+    
+    carousel.addEventListener('mouseleave', () => {
+      isDown = false;
+      carousel.style.cursor = 'grab';
+    });
+    
+    carousel.addEventListener('mouseup', () => {
+      isDown = false;
+      carousel.style.cursor = 'grab';
+    });
+    
+    carousel.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - carousel.offsetLeft;
+      const walk = (x - startX) * 2;
+      carousel.scrollLeft = scrollLeft - walk;
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "THE"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading Accent",
+      "default": "DROP"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to Show",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Carousel"
+    }
+  ]
+}
+{% endschema %}
+

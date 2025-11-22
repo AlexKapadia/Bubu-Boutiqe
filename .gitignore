@@ -21,3 +21,7 @@ npm-debug.log*
 # Build outputs (if any)
 dist/
 build/
+
+# Shopify theme files
+.shopify/
+config.yml

@@ -1,0 +1,76 @@
+<footer class="relative z-20 py-12 px-6 bg-purple-50 border-t border-purple-200">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <h3 class="text-xl font-black mb-4 bg-gradient-to-r from-purple-400 via-purple-300 to-purple-200 bg-clip-text text-transparent">
+          {{ section.settings.footer_logo_text | default: shop.name }}
+        </h3>
+        <p class="text-gray-600 text-sm">
+          {{ section.settings.footer_description }}
+        </p>
+      </div>
+      
+      <div>
+        <h4 class="font-bold mb-4 text-purple-600">SHOP</h4>
+        <ul class="space-y-2 text-sm">
+          {%- for link in linklists.footer.links -%}
+            <li>
+              <a href="{{ link.url }}" class="text-gray-600 hover:text-purple-500 transition">
+                {{ link.title }}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="font-bold mb-4 text-purple-600">ABOUT</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/pages/about" class="text-gray-600 hover:text-purple-500 transition">About Us</a></li>
+          <li><a href="/pages/contact" class="text-gray-600 hover:text-purple-500 transition">Contact</a></li>
+          <li><a href="/pages/shipping" class="text-gray-600 hover:text-purple-500 transition">Shipping</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="font-bold mb-4 text-purple-600">FOLLOW US</h4>
+        <div class="flex gap-4">
+          {%- if settings.social_instagram != blank -%}
+            <a href="{{ settings.social_instagram }}" class="text-purple-500 hover:text-purple-600 transition" target="_blank">Instagram</a>
+          {%- endif -%}
+          {%- if settings.social_twitter != blank -%}
+            <a href="{{ settings.social_twitter }}" class="text-purple-500 hover:text-purple-600 transition" target="_blank">Twitter</a>
+          {%- endif -%}
+          {%- if settings.social_facebook != blank -%}
+            <a href="{{ settings.social_facebook }}" class="text-purple-500 hover:text-purple-600 transition" target="_blank">Facebook</a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+    
+    <div class="pt-8 border-t border-purple-200 text-center text-sm text-gray-600">
+      <p>&copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "footer_logo_text",
+      "label": "Footer Logo Text",
+      "default": "BUBU BOUTIQUE"
+    },
+    {
+      "type": "textarea",
+      "id": "footer_description",
+      "label": "Footer Description",
+      "default": "Exclusive Labubu collectibles. Limited edition releases. Rare finds."
+    }
+  ]
+}
+{% endschema %}
+

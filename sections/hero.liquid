@@ -1,0 +1,167 @@
+<section class="relative h-screen flex items-center justify-center overflow-hidden">
+  {%- if section.settings.video_url != blank -%}
+    <div class="video-container">
+      <video autoplay loop muted playsinline>
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    </div>
+  {%- else -%}
+    <div class="video-container">
+      <div class="w-full h-full bg-gradient-to-br from-purple-200/30 via-purple-100/30 to-purple-300/30"></div>
+    </div>
+  {%- endif -%}
+  
+  <div class="relative z-10 text-center px-6">
+    <h1 class="hero-text text-6xl md:text-9xl lg:text-[12rem] mb-4 text-{{ section.settings.text_color }}">
+      <span class="inline-block opacity-0" id="hero-line-1">{{ section.settings.heading_line_1 | default: "THE" }}</span>
+      <br>
+      <span class="inline-block opacity-0" id="hero-line-2">{{ section.settings.heading_line_2 | default: "MONSTERS" }}</span>
+      <br>
+      <span class="inline-block opacity-0" id="hero-line-3">{{ section.settings.heading_line_3 | default: "ARE HERE" }}</span>
+    </h1>
+    <p class="text-xl md:text-2xl mt-8 opacity-0 text-{{ section.settings.text_color }}" id="hero-subtitle">
+      {{ section.settings.subtitle | default: "Exclusive Labubu Collectibles • Limited Edition" }}
+    </p>
+    
+    {%- if section.settings.button_text != blank -%}
+      <a href="{{ section.settings.button_link }}" class="btn-primary mt-8 inline-block opacity-0" id="hero-button">
+        {{ section.settings.button_text }}
+      </a>
+    {%- endif -%}
+  </div>
+  
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+    <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+    </svg>
+  </div>
+</section>
+
+{%- if section.settings.show_marquee -%}
+  <section class="relative z-20 bg-purple-50 py-4 overflow-hidden">
+    <div class="marquee">
+      <div class="marquee-content flex gap-12 text-sm font-bold">
+        <span class="text-purple-500">LABUBU MACARON SERIES</span>
+        <span class="text-purple-400">LIMITED EDITION</span>
+        <span class="text-purple-600">RARE COLLECTIBLES</span>
+        <span class="text-purple-500">LABUBU MACARON SERIES</span>
+        <span class="text-purple-400">LIMITED EDITION</span>
+        <span class="text-purple-600">RARE COLLECTIBLES</span>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<script>
+  if (typeof gsap !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+    
+    gsap.to("#hero-line-1", {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: "power3.out",
+      delay: 0.2
+    });
+    
+    gsap.to("#hero-line-2", {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: "power3.out",
+      delay: 0.4
+    });
+    
+    gsap.to("#hero-line-3", {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: "power3.out",
+      delay: 0.6
+    });
+    
+    gsap.to("#hero-subtitle", {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: "power3.out",
+      delay: 0.8
+    });
+    
+    if (document.getElementById("hero-button")) {
+      gsap.to("#hero-button", {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        delay: 1.0
+      });
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Heading Line 1",
+      "default": "THE"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Heading Line 2",
+      "default": "MONSTERS"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_3",
+      "label": "Heading Line 3",
+      "default": "ARE HERE"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Exclusive Labubu Collectibles • Limited Edition"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL (optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_marquee",
+      "label": "Show Marquee Ticker",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#2d2d3a"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Section"
+    }
+  ]
+}
+{% endschema %}
+

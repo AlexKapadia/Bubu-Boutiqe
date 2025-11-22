@@ -1,0 +1,71 @@
+<div 
+  data-cart-drawer-container
+  class="cart-drawer fixed top-0 right-0 h-full w-full md:w-96 bg-white/95 backdrop-blur-xl z-50 border-l border-purple-200"
+>
+  <div class="h-full flex flex-col">
+    <div class="p-6 border-b border-purple-200 flex items-center justify-between">
+      <h3 class="text-2xl font-black text-purple-600">CART</h3>
+      <button data-cart-close class="text-2xl hover:text-purple-500 transition text-purple-600">
+        ×
+      </button>
+    </div>
+    
+    <div data-cart-drawer class="flex-1 overflow-y-auto p-6">
+      <div class="text-center py-20 text-gray-500">
+        <p class="text-lg">Your cart is empty</p>
+      </div>
+    </div>
+    
+    <div class="p-6 border-t border-purple-200">
+      <div class="flex justify-between items-center mb-6">
+        <span class="text-xl font-bold text-purple-600">TOTAL</span>
+        <span class="text-2xl font-black text-purple-600" data-cart-total>$0.00</span>
+      </div>
+      <a 
+        href="{{ routes.cart_url }}"
+        class="block w-full py-4 gradient-primary hover:opacity-90 rounded-lg font-bold transition-all duration-300 text-center text-white"
+      >
+        CHECKOUT
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Overlay -->
+<div 
+  data-cart-overlay
+  class="fixed inset-0 bg-black/20 z-40 hidden"
+></div>
+
+<script>
+  // Cart overlay toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    const cartToggle = document.querySelector('[data-cart-toggle]');
+    const cartClose = document.querySelector('[data-cart-close]');
+    const cartDrawer = document.querySelector('[data-cart-drawer-container]');
+    const cartOverlay = document.querySelector('[data-cart-overlay]');
+    
+    function openCart() {
+      cartDrawer.classList.add('open');
+      cartOverlay.classList.remove('hidden');
+    }
+    
+    function closeCart() {
+      cartDrawer.classList.remove('open');
+      cartOverlay.classList.add('hidden');
+    }
+    
+    if (cartToggle) {
+      cartToggle.addEventListener('click', openCart);
+    }
+    
+    if (cartClose) {
+      cartClose.addEventListener('click', closeCart);
+    }
+    
+    if (cartOverlay) {
+      cartOverlay.addEventListener('click', closeCart);
+    }
+  });
+</script>
+

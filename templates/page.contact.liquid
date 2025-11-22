@@ -1,0 +1,141 @@
+{% comment %}
+  Contact page template
+{% endcomment %}
+
+<section class="relative pt-32 pb-20 px-6">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="hero-text text-6xl md:text-8xl mb-12 text-purple-600">
+      CONTACT <span class="text-purple-400">US</span>
+    </h1>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- Contact Form -->
+      <div>
+        <h2 class="text-2xl font-bold mb-6 text-purple-600">SEND US A MESSAGE</h2>
+        {% form 'contact' %}
+          {% if form.posted_successfully? %}
+            <div class="p-4 bg-green-100 border border-green-400 rounded-lg text-green-700 mb-6">
+              <p>Thank you! Your message has been sent. We'll get back to you soon.</p>
+            </div>
+          {% endif %}
+          
+          {% if form.errors %}
+            <div class="p-4 bg-red-100 border border-red-400 rounded-lg text-red-700 mb-6">
+              <p>{{ form.errors | default_errors }}</p>
+            </div>
+          {% endif %}
+          
+          <div class="space-y-6">
+            <div>
+              <label for="ContactFormName" class="block text-sm font-medium mb-2 text-purple-600">Name</label>
+              <input 
+                type="text" 
+                name="contact[name]"
+                id="ContactFormName"
+                required
+                class="form-input w-full px-4 py-3 rounded-lg"
+                placeholder="Your name"
+              >
+            </div>
+            
+            <div>
+              <label for="ContactFormEmail" class="block text-sm font-medium mb-2 text-purple-600">Email</label>
+              <input 
+                type="email" 
+                name="contact[email]"
+                id="ContactFormEmail"
+                required
+                class="form-input w-full px-4 py-3 rounded-lg"
+                placeholder="your@email.com"
+              >
+            </div>
+            
+            <div>
+              <label for="ContactFormSubject" class="block text-sm font-medium mb-2 text-purple-600">Subject</label>
+              <input 
+                type="text" 
+                name="contact[subject]"
+                id="ContactFormSubject"
+                required
+                class="form-input w-full px-4 py-3 rounded-lg"
+                placeholder="What's this about?"
+              >
+            </div>
+            
+            <div>
+              <label for="ContactFormMessage" class="block text-sm font-medium mb-2 text-purple-600">Message</label>
+              <textarea 
+                name="contact[body]"
+                id="ContactFormMessage"
+                required
+                rows="6"
+                class="form-input w-full px-4 py-3 rounded-lg resize-none"
+                placeholder="Tell us what's on your mind..."
+              ></textarea>
+            </div>
+            
+            <button 
+              type="submit"
+              class="w-full py-4 gradient-primary hover:opacity-90 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 text-white"
+            >
+              SEND MESSAGE
+            </button>
+          </div>
+        {% endform %}
+      </div>
+      
+      <!-- Contact Info -->
+      <div>
+        <h2 class="text-2xl font-bold mb-6 text-purple-600">GET IN TOUCH</h2>
+        <div class="space-y-8">
+          <div>
+            <h3 class="text-lg font-bold text-purple-500 mb-2">EMAIL</h3>
+            <a href="mailto:{{ shop.email }}" class="text-gray-700 hover:text-purple-500 transition">
+              {{ shop.email }}
+            </a>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-bold text-purple-400 mb-2">SOCIAL</h3>
+            <div class="flex gap-4">
+              {%- if settings.social_instagram != blank -%}
+                <a href="{{ settings.social_instagram }}" class="text-purple-500 hover:text-purple-600 transition" target="_blank">Instagram</a>
+              {%- endif -%}
+              {%- if settings.social_twitter != blank -%}
+                <a href="{{ settings.social_twitter }}" class="text-purple-500 hover:text-purple-600 transition" target="_blank">Twitter</a>
+              {%- endif -%}
+              {%- if settings.social_facebook != blank -%}
+                <a href="{{ settings.social_facebook }}" class="text-purple-500 hover:text-purple-600 transition" target="_blank">Facebook</a>
+              {%- endif -%}
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-bold text-purple-600 mb-2">HOURS</h3>
+            <p class="text-gray-700">Monday - Friday: 9AM - 6PM EST</p>
+            <p class="text-gray-700">Saturday: 10AM - 4PM EST</p>
+            <p class="text-gray-700">Sunday: Closed</p>
+          </div>
+          
+          <div class="pt-8 border-t border-purple-200">
+            <p class="text-gray-600">
+              We typically respond within 24 hours. For urgent inquiries about orders, please include your order number in your message.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  if (typeof gsap !== 'undefined') {
+    gsap.from("h1", {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      ease: "power3.out"
+    });
+  }
+</script>
+

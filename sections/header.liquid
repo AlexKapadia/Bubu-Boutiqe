@@ -1,0 +1,73 @@
+{%- liquid
+  assign country_selector = false
+  assign language_selector = false
+
+  if localization.available_countries.size > 1 and localization.available_languages.size > 1
+    assign country_selector = true
+    assign language_selector = true
+  elsif localization.available_countries.size > 1
+    assign country_selector = true
+  elsif localization.available_languages.size > 1
+    assign language_selector = true
+  endif
+-%}
+
+<header class="glass-header fixed top-0 left-0 right-0 z-50 px-6 py-4">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <a href="{{ routes.root_url }}" class="text-2xl font-black tracking-tighter">
+      {%- if section.settings.logo_image != blank -%}
+        <img src="{{ section.settings.logo_image | image_url: width: 200 }}" alt="{{ shop.name }}" class="h-8">
+      {%- else -%}
+        <span class="bg-gradient-to-r from-purple-400 via-purple-300 to-purple-200 bg-clip-text text-transparent">
+          {{ section.settings.logo_text | default: shop.name }}
+        </span>
+      {%- endif -%}
+    </a>
+    
+    <div class="flex items-center gap-6">
+      <nav class="hidden md:flex gap-8 text-sm font-medium">
+        {%- for link in linklists.main-menu.links -%}
+          <a href="{{ link.url }}" class="hover:text-purple-500 transition text-{{ section.settings.text_color }}">
+            {{ link.title }}
+          </a>
+        {%- endfor -%}
+      </nav>
+      
+      <button 
+        data-cart-toggle
+        class="relative px-4 py-2 bg-purple-100 hover:bg-purple-200 rounded-full transition flex items-center gap-2"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>
+        <span class="text-xs font-bold" data-cart-count>0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "BUBU BOUTIQUE"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo Image"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#2d2d3a"
+    }
+  ]
+}
+{% endschema %}
+

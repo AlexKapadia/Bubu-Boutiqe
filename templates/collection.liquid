@@ -1,0 +1,105 @@
+{% comment %}
+  Collection template
+{% endcomment %}
+
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="hero-text text-6xl md:text-8xl lg:text-9xl mb-8 text-purple-600">
+      {{ collection.title | default: "THE DROP" }}
+    </h1>
+    {%- if collection.description != blank -%}
+      <p class="text-xl text-gray-600 max-w-2xl">
+        {{ collection.description }}
+      </p>
+    {%- endif -%}
+  </div>
+</section>
+
+<!-- Filters -->
+{%- if collection.products_count > 0 -%}
+  <section class="relative z-20 px-6 mb-12">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-wrap gap-4 items-center">
+        <button 
+          onclick="filterProducts('all')"
+          class="filter-btn px-6 py-2 rounded-full font-bold transition bg-purple-500 text-white"
+          data-filter="all"
+        >
+          ALL
+        </button>
+        <button 
+          onclick="filterProducts('Secret')"
+          class="filter-btn px-6 py-2 rounded-full font-bold transition bg-purple-100 hover:bg-purple-200 text-purple-600"
+          data-filter="Secret"
+        >
+          SECRET
+        </button>
+        <button 
+          onclick="filterProducts('Super Rare')"
+          class="filter-btn px-6 py-2 rounded-full font-bold transition bg-purple-100 hover:bg-purple-200 text-purple-600"
+          data-filter="Super Rare"
+        >
+          SUPER RARE
+        </button>
+        <button 
+          onclick="filterProducts('Rare')"
+          class="filter-btn px-6 py-2 rounded-full font-bold transition bg-purple-100 hover:bg-purple-200 text-purple-600"
+          data-filter="Rare"
+        >
+          RARE
+        </button>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<!-- Products Grid -->
+<section class="relative z-20 px-6 pb-20">
+  <div class="max-w-7xl mx-auto">
+    {%- if collection.products_count > 0 -%}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="products-grid">
+        {%- for product in collection.products -%}
+          {% render 'product-card', product: product %}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="text-center py-20">
+        <p class="text-2xl text-gray-500">No products found</p>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  function filterProducts(rarity) {
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => {
+      if (btn.dataset.filter === rarity) {
+        btn.classList.add('bg-purple-500', 'text-white');
+        btn.classList.remove('bg-purple-100', 'text-purple-600');
+      } else {
+        btn.classList.remove('bg-purple-500', 'text-white');
+        btn.classList.add('bg-purple-100', 'text-purple-600');
+      }
+    });
+    
+    // Filter logic would go here - for now showing all
+    // In a real implementation, you'd filter by metafield
+  }
+  
+  // GSAP animations
+  if (typeof gsap !== 'undefined') {
+    gsap.from(".product-card", {
+      opacity: 0,
+      y: 50,
+      duration: 0.6,
+      stagger: 0.1,
+      scrollTrigger: {
+        trigger: ".product-card",
+        start: "top 90%"
+      }
+    });
+  }
+</script>
+

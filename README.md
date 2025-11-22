@@ -1,55 +1,104 @@
-# BuBu Boutique - Labubu Collectibles E-Commerce Website
+# BuBu Boutique - Shopify Theme
 
-A high-end, Awwwards-level e-commerce website for BuBu Boutique, featuring exclusive Labubu collectibles with a "Nike Tech x Pop Mart" aesthetic.
+A high-end, Awwwards-level Shopify theme for BuBu Boutique, featuring exclusive Labubu collectibles with a light, pastel purple aesthetic.
 
 ## 🎨 Design Features
 
-- **Industrial Nike Aesthetic**: Grid overlays, massive typography, negative space
-- **Labubu Chaos**: Neon accents (Hot Pink, Neon Lime, Electric Blue), glitch effects
+- **Light Pastel Purple Aesthetic**: Soft lavender, periwinkle, and pale purple tones
+- **Modern Premium Design**: Clean layouts with glassmorphism effects
 - **Smooth Animations**: GSAP parallax, marquee tickers, 3D card effects
-- **Glassmorphism UI**: Modern glass-effect headers and components
+- **Fully Responsive**: Mobile-first design that works on all devices
 
-## 📄 Pages
+## 📁 Theme Structure
 
-- **Home** (`index.html`) - Hero section, product carousel, rarity chart
-- **Shop** (`shop.html`) - Full product grid with filters
-- **Product Detail** (`product.html`) - Individual product pages
-- **About** (`about.html`) - Brand story and mission
-- **Contact** (`contact.html`) - Contact form and information
-- **Cart** (`cart.html`) - Shopping cart and checkout
+```
+├── assets/
+│   ├── theme.css          # Main stylesheet with pastel purple theme
+│   └── theme.js           # Cart functionality and interactions
+├── config/
+│   └── settings_schema.json  # Theme customization settings
+├── layout/
+│   └── theme.liquid       # Base layout template
+├── sections/
+│   ├── header.liquid      # Site header with navigation
+│   ├── hero.liquid        # Hero section with animations
+│   ├── product-carousel.liquid  # Product carousel section
+│   ├── rarity-chart.liquid      # Rarity visualization
+│   └── footer.liquid      # Site footer
+├── snippets/
+│   ├── cart-drawer.liquid # Shopping cart drawer
+│   ├── product-card.liquid     # Product card component
+│   └── meta-tags.liquid   # Meta tags snippet
+└── templates/
+    ├── index.liquid       # Homepage template
+    ├── product.liquid     # Product detail page
+    ├── collection.liquid  # Collection/Shop page
+    ├── page.about.liquid  # About page
+    └── page.contact.liquid # Contact page
+```
 
-## 🛠️ Tech Stack
+## 🚀 Installation
 
-- **HTML5** - Structure
-- **TailwindCSS** - Styling (via CDN)
-- **GSAP** - Animations
-- **Alpine.js** - State management
-- **LocalStorage** - Cart persistence
+1. **Upload to Shopify:**
+   - Go to Shopify Admin → Online Store → Themes
+   - Click "Add theme" → "Upload zip file"
+   - Zip this entire theme folder and upload
 
-## 🚀 Shopify Integration Ready
+2. **Or Connect via GitHub:**
+   - Go to Shopify Admin → Online Store → Themes
+   - Click "Add theme" → "Connect from GitHub"
+   - Connect your repository
 
-The codebase is structured to easily integrate with Shopify:
+## ⚙️ Theme Settings
 
-1. Replace `shopData` mock data with Shopify Liquid loops
-2. Update `addToCart()` function to use Shopify AJAX API
-3. Connect checkout to Shopify checkout flow
+Customize the theme through Shopify Admin:
+- **Colors**: Primary, secondary, accent, background, and text colors
+- **Header**: Logo text or image upload
+- **Social Media**: Instagram, Twitter, Facebook links
+- **Hero Section**: Customizable heading, subtitle, and button
+- **Collections**: Select which collection to display
 
-See comments in code for specific integration points.
+## 🎨 Color Palette
 
-## 📦 Installation
+- **Primary Purple**: `#b19cd9` (Soft Lavender)
+- **Secondary Purple**: `#c5b3e6` (Periwinkle)
+- **Accent Purple**: `#e6d3f5` (Pale Purple)
+- **Background**: `#f5f0ff` (Light Purple Tint)
+- **Text**: `#2d2d3a` (Soft Dark Gray)
 
-No build process required! Just open `index.html` in a browser.
+## 📦 Features
 
-## 🎯 Features
-
+- ✅ Shopify Cart API integration
+- ✅ Product variant handling
+- ✅ Collection filtering
 - ✅ Responsive design
-- ✅ Cart persistence across pages
-- ✅ Product filtering
-- ✅ Smooth animations
-- ✅ Modern UI/UX
-- ✅ Shopify-ready structure
+- ✅ GSAP animations
+- ✅ Drag-scroll carousel
+- ✅ Rarity chart visualization
+- ✅ Contact form integration
+- ✅ SEO optimized
+
+## 🔧 Customization
+
+### Adding Rarity to Products
+
+Add a metafield to products:
+1. Go to Settings → Custom data → Products
+2. Create a metafield named `rarity` (type: single line text)
+3. Values: "Rare", "Super Rare", or "Secret"
+
+### Menu Setup
+
+1. Go to Navigation in Shopify Admin
+2. Create a menu named "Main menu"
+3. Add your navigation links
+
+### Footer Links
+
+1. Go to Navigation in Shopify Admin
+2. Create a menu named "Footer"
+3. Add footer links
 
 ## 📝 License
 
 All rights reserved - BuBu Boutique
-

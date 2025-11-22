@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --color-primary: #b19cd9;
+  --color-secondary: #c5b3e6;
+  --color-accent: #e6d3f5;
+  --color-background: #f5f0ff;
+  --color-text: #2d2d3a;
+  --color-dark: #3a3a4a;
+  --color-mint: #a8e6cf;
+  --color-lavender: #c8a2c8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--color-background);
+  color: var(--color-text);
+  overflow-x: hidden;
+}
+
+/* Grid Background Overlay */
+.grid-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(177, 156, 217, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(177, 156, 217, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Glassmorphism Header */
+.glass-header {
+  background: rgba(245, 240, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(177, 156, 217, 0.2);
+}
+
+/* Hero Video Container */
+.video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+}
+
+/* Product Card 3D Effect */
+.product-card {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: perspective(1000px) rotateY(5deg) rotateX(-5deg) scale(1.02);
+}
+
+/* Glitch Effect */
+.glitch-hover {
+  position: relative;
+}
+
+.glitch-hover:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(230, 211, 245, 0.3);
+  animation: jitter 0.3s infinite;
+  z-index: 1;
+}
+
+@keyframes jitter {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-2px, 2px); }
+  50% { transform: translate(2px, -2px); }
+  75% { transform: translate(-2px, -2px); }
+}
+
+/* Magnetic Button Effect */
+.magnetic-btn {
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+/* Cart Drawer */
+.cart-drawer {
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cart-drawer.open {
+  transform: translateX(0);
+}
+
+/* Marquee Ticker */
+.marquee {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Rarity Bar */
+.rarity-bar {
+  transition: width 1s ease-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+/* Typography */
+.hero-text {
+  letter-spacing: -0.05em;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/* Drag Scroll */
+.drag-scroll {
+  cursor: grab;
+  user-select: none;
+}
+
+.drag-scroll:active {
+  cursor: grabbing;
+}
+
+/* Pastel Purple Gradients */
+.gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+.gradient-soft {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-mint) 100%);
+}
+
+/* Button Styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(177, 156, 217, 0.4);
+}
+
+/* Form Inputs */
+.form-input {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(177, 156, 217, 0.3);
+  transition: all 0.3s ease;
+  color: var(--color-text);
+}
+
+.form-input:focus {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.1);
+}
+
+/* Card Styles */
+.card {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(177, 156, 217, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+/* Rarity Badges */
+.rarity-rare {
+  background: rgba(200, 162, 200, 0.8);
+  color: white;
+}
+
+.rarity-super-rare {
+  background: rgba(168, 230, 207, 0.8);
+  color: var(--color-text);
+}
+
+.rarity-secret {
+  background: rgba(197, 179, 230, 0.8);
+  color: white;
+}
+

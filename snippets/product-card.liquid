@@ -1,0 +1,65 @@
+{%- liquid
+  assign product = product | default: block.settings.product
+  if product == blank
+    continue
+  endif
+  
+  assign rarity = product.metafields.custom.rarity.value | default: 'Rare'
+  assign rarity_class = 'rarity-rare'
+  if rarity == 'Super Rare'
+    assign rarity_class = 'rarity-super-rare'
+  elsif rarity == 'Secret'
+    assign rarity_class = 'rarity-secret'
+  endif
+-%}
+
+<div class="product-card glitch-hover flex-shrink-0 w-80 card overflow-hidden">
+  <div class="relative h-96 overflow-hidden">
+    <a href="{{ product.url }}">
+      {%- if product.featured_image -%}
+        <img 
+          src="{{ product.featured_image | image_url: width: 600 }}" 
+          alt="{{ product.title | escape }}"
+          class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+          loading="lazy"
+        >
+      {%- else -%}
+        <div class="w-full h-full bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+          <span class="text-purple-400">No Image</span>
+        </div>
+      {%- endif -%}
+    </a>
+    <div class="absolute top-4 right-4">
+      <span class="px-3 py-1 rounded-full text-xs font-bold {{ rarity_class }}">
+        {{ rarity }}
+      </span>
+    </div>
+  </div>
+  <div class="p-6">
+    <a href="{{ product.url }}" class="block">
+      <h3 class="text-xl font-bold mb-2 hover:text-purple-500 transition">{{ product.title }}</h3>
+    </a>
+    <div class="flex items-center gap-3 mb-4">
+      <span class="text-2xl font-black text-purple-600">
+        {{ product.price | money }}
+      </span>
+      {%- if product.compare_at_price > product.price -%}
+        <span class="text-gray-500 line-through">
+          {{ product.compare_at_price | money }}
+        </span>
+      {%- endif -%}
+    </div>
+    <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button 
+        type="submit"
+        data-add-to-cart
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+        class="magnetic-btn w-full py-3 gradient-primary hover:opacity-90 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 text-white"
+      >
+        ADD TO CART
+      </button>
+    </form>
+  </div>
+</div>
+

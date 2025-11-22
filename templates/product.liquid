@@ -1,0 +1,132 @@
+{% comment %}
+  Product template
+{% endcomment %}
+
+<section class="relative pt-32 pb-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- Product Image -->
+      <div class="relative">
+        <div class="aspect-square bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg overflow-hidden border border-purple-200">
+          {%- if product.featured_image -%}
+            <img 
+              src="{{ product.featured_image | image_url: width: 1200 }}" 
+              alt="{{ product.title | escape }}"
+              class="w-full h-full object-cover"
+              id="ProductImage"
+            >
+          {%- else -%}
+            <div class="w-full h-full flex items-center justify-center">
+              <span class="text-purple-400 text-xl">No Image</span>
+            </div>
+          {%- endif -%}
+        </div>
+        
+        {%- if product.images.size > 1 -%}
+          <div class="flex gap-4 mt-4">
+            {%- for image in product.images limit: 4 -%}
+              <button 
+                onclick="document.getElementById('ProductImage').src='{{ image | image_url: width: 1200 }}'"
+                class="w-20 h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-purple-400 transition"
+              >
+                <img src="{{ image | image_url: width: 200 }}" alt="{{ product.title | escape }}" class="w-full h-full object-cover">
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        
+        {%- liquid
+          assign rarity = product.metafields.custom.rarity.value | default: 'Rare'
+          assign rarity_class = 'rarity-rare'
+          if rarity == 'Super Rare'
+            assign rarity_class = 'rarity-super-rare'
+          elsif rarity == 'Secret'
+            assign rarity_class = 'rarity-secret'
+          endif
+        -%}
+        <div class="absolute top-4 right-4">
+          <span class="px-4 py-2 rounded-full text-sm font-bold {{ rarity_class }}">
+            {{ rarity }}
+          </span>
+        </div>
+      </div>
+      
+      <!-- Product Info -->
+      <div class="flex flex-col justify-center">
+        <h1 class="hero-text text-4xl md:text-6xl mb-6 text-purple-600">{{ product.title }}</h1>
+        
+        <div class="flex items-center gap-4 mb-8">
+          <span class="text-4xl font-black text-purple-600">{{ product.price | money }}</span>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="text-2xl text-gray-500 line-through">{{ product.compare_at_price | money }}</span>
+          {%- endif -%}
+        </div>
+        
+        <div class="mb-8">
+          {{ product.description }}
+        </div>
+        
+        <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" id="product-form">
+          {%- unless product.has_only_default_variant -%}
+            <div class="mb-6">
+              {%- for option in product.options_with_values -%}
+                <label class="block text-sm font-medium mb-2 text-purple-600">{{ option.name }}</label>
+                <select name="id" class="form-input w-full px-4 py-3 rounded-lg mb-4" onchange="updateVariantPrice(this)">
+                  {%- for value in option.values -%}
+                    <option value="{{ product.variants[forloop.index0].id }}" 
+                      {% if product.variants[forloop.index0].available == false %}disabled{% endif %}>
+                      {{ value }} - {{ product.variants[forloop.index0].price | money }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              {%- endfor -%}
+            </div>
+          {%- else -%}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          {%- endunless -%}
+          
+          <div class="flex gap-4 mb-6">
+            <div class="flex items-center gap-4 bg-purple-100 rounded-lg px-4 py-2">
+              <button type="button" onclick="updateQuantity(-1)" class="text-2xl hover:text-purple-600 transition text-purple-500">−</button>
+              <span class="text-xl font-bold w-8 text-center" id="quantity">1</span>
+              <button type="button" onclick="updateQuantity(1)" class="text-2xl hover:text-purple-600 transition text-purple-500">+</button>
+            </div>
+            <button 
+              type="submit"
+              data-add-to-cart
+              data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+              class="flex-1 py-4 gradient-primary hover:opacity-90 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 text-white"
+              {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+            >
+              {%- if product.selected_or_first_available_variant.available -%}
+                ADD TO CART
+              {%- else -%}
+                SOLD OUT
+              {%- endif -%}
+            </button>
+          </div>
+        </form>
+        
+        <a href="{{ routes.collections_url }}" class="mt-6 text-center text-purple-500 hover:text-purple-600 transition">
+          ← Back to Shop
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  let currentQuantity = 1;
+  
+  function updateQuantity(change) {
+    currentQuantity = Math.max(1, currentQuantity + change);
+    document.getElementById('quantity').textContent = currentQuantity;
+  }
+  
+  function updateVariantPrice(select) {
+    // Update price when variant changes
+    const selectedOption = select.options[select.selectedIndex];
+    // You can add price update logic here
+  }
+</script>
+
