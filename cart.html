@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - BuBu Boutique</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #111;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .glass-header {
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .hero-text {
+            letter-spacing: -0.05em;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body x-data="cartApp()" x-init="init()">
+    <div class="grid-overlay"></div>
+    
+    <header class="glass-header fixed top-0 left-0 right-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="text-2xl font-black tracking-tighter">
+                <span class="bg-gradient-to-r from-pink-500 via-green-400 to-blue-500 bg-clip-text text-transparent">
+                    BUBU BOUTIQUE
+                </span>
+            </a>
+            <div class="flex items-center gap-6">
+                <nav class="hidden md:flex gap-8 text-sm font-medium">
+                    <a href="index.html" class="hover:text-pink-500 transition">HOME</a>
+                    <a href="shop.html" class="hover:text-pink-500 transition">THE DROP</a>
+                    <a href="about.html" class="hover:text-blue-500 transition">ABOUT</a>
+                    <a href="contact.html" class="hover:text-green-400 transition">CONTACT</a>
+                </nav>
+                <a href="cart.html" class="relative px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full transition flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span class="text-xs font-bold" x-text="cartCount"></span>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <section class="relative pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="hero-text text-6xl md:text-8xl mb-12">
+                YOUR <span class="text-pink-500">CART</span>
+            </h1>
+            
+            <template x-if="cart.length === 0">
+                <div class="text-center py-20">
+                    <p class="text-3xl text-gray-500 mb-6">Your cart is empty</p>
+                    <a href="shop.html" class="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-green-400 hover:from-pink-600 hover:to-green-500 rounded-lg font-bold transition-all duration-300 transform hover:scale-105">
+                        CONTINUE SHOPPING
+                    </a>
+                </div>
+            </template>
+            
+            <template x-if="cart.length > 0">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <!-- Cart Items -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <template x-for="item in cart" :key="item.id">
+                            <div class="flex gap-6 bg-gradient-to-br from-gray-900 to-black rounded-lg p-6 border border-white/10">
+                                <a :href="'product.html?id=' + item.id" class="flex-shrink-0">
+                                    <img :src="item.image" :alt="item.title" class="w-32 h-32 object-cover rounded">
+                                </a>
+                                <div class="flex-1">
+                                    <a :href="'product.html?id=' + item.id" class="block">
+                                        <h3 class="text-xl font-bold mb-2 hover:text-pink-500 transition" x-text="item.title"></h3>
+                                    </a>
+                                    <p class="text-lg font-bold mb-4" x-text="formatPrice(item.price)"></p>
+                                    
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex items-center gap-4 bg-white/10 rounded-lg px-4 py-2">
+                                            <button @click="updateQuantity(item.id, item.quantity - 1)" class="text-xl hover:text-pink-500 transition">−</button>
+                                            <span class="text-lg font-bold w-8 text-center" x-text="item.quantity"></span>
+                                            <button @click="updateQuantity(item.id, item.quantity + 1)" class="text-xl hover:text-pink-500 transition">+</button>
+                                        </div>
+                                        <button @click="removeFromCart(item.id)" class="text-red-500 hover:text-red-400 transition">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-2xl font-black" x-text="formatPrice(item.price * item.quantity)"></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    
+                    <!-- Order Summary -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-gradient-to-br from-gray-900 to-black rounded-lg p-6 border border-white/10 sticky top-32">
+                            <h2 class="text-2xl font-black mb-6">ORDER SUMMARY</h2>
+                            
+                            <div class="space-y-4 mb-6">
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Subtotal</span>
+                                    <span x-text="formatPrice(cartTotal)"></span>
+                                </div>
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Shipping</span>
+                                    <span>Calculated at checkout</span>
+                                </div>
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Tax</span>
+                                    <span>Calculated at checkout</span>
+                                </div>
+                                <div class="pt-4 border-t border-white/10 flex justify-between text-2xl font-black">
+                                    <span>TOTAL</span>
+                                    <span x-text="formatPrice(cartTotal)"></span>
+                                </div>
+                            </div>
+                            
+                            <button 
+                                @click="checkout()"
+                                class="w-full py-4 bg-gradient-to-r from-pink-500 to-green-400 hover:from-pink-600 hover:to-green-500 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 mb-4"
+                            >
+                                PROCEED TO CHECKOUT
+                            </button>
+                            
+                            <a href="shop.html" class="block text-center text-gray-400 hover:text-pink-500 transition">
+                                Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </section>
+    
+    <script>
+        function cartApp() {
+            return {
+                cart: JSON.parse(localStorage.getItem('cart') || '[]'),
+                
+                get cartCount() {
+                    return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+                },
+                
+                get cartTotal() {
+                    return this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                },
+                
+                init() {
+                    gsap.from("h1", {
+                        opacity: 0,
+                        y: 50,
+                        duration: 1,
+                        ease: "power3.out"
+                    });
+                },
+                
+                formatPrice(cents) {
+                    return `$${(cents / 100).toFixed(2)}`;
+                },
+                
+                updateQuantity(id, newQuantity) {
+                    if (newQuantity <= 0) {
+                        this.removeFromCart(id);
+                        return;
+                    }
+                    
+                    const item = this.cart.find(item => item.id === id);
+                    if (item) {
+                        item.quantity = newQuantity;
+                        localStorage.setItem('cart', JSON.stringify(this.cart));
+                    }
+                },
+                
+                removeFromCart(id) {
+                    this.cart = this.cart.filter(item => item.id !== id);
+                    localStorage.setItem('cart', JSON.stringify(this.cart));
+                },
+                
+                checkout() {
+                    // TODO: Connect to Shopify checkout
+                    // window.location.href = '/checkout';
+                    alert('Checkout functionality - connect to Shopify checkout');
+                }
+            };
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - BuBu Boutique</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #111;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .glass-header {
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .magnetic-btn {
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+        
+        .hero-text {
+            letter-spacing: -0.05em;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body x-data="productApp()" x-init="init()">
+    <div class="grid-overlay"></div>
+    
+    <header class="glass-header fixed top-0 left-0 right-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="text-2xl font-black tracking-tighter">
+                <span class="bg-gradient-to-r from-pink-500 via-green-400 to-blue-500 bg-clip-text text-transparent">
+                    BUBU BOUTIQUE
+                </span>
+            </a>
+            <div class="flex items-center gap-6">
+                <nav class="hidden md:flex gap-8 text-sm font-medium">
+                    <a href="index.html" class="hover:text-pink-500 transition">HOME</a>
+                    <a href="shop.html" class="hover:text-pink-500 transition">THE DROP</a>
+                    <a href="about.html" class="hover:text-blue-500 transition">ABOUT</a>
+                    <a href="contact.html" class="hover:text-green-400 transition">CONTACT</a>
+                </nav>
+                <a href="cart.html" class="relative px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full transition flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span class="text-xs font-bold" x-text="cartCount"></span>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <section class="relative pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <template x-if="product">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Product Image -->
+                    <div class="relative">
+                        <div class="aspect-square bg-gradient-to-br from-gray-900 to-black rounded-lg overflow-hidden border border-white/10">
+                            <img 
+                                :src="product.image" 
+                                :alt="product.title"
+                                class="w-full h-full object-cover"
+                            >
+                        </div>
+                        <div class="absolute top-4 right-4">
+                            <span 
+                                class="px-4 py-2 rounded-full text-sm font-bold"
+                                :class="{
+                                    'bg-pink-500/80': product.rarity === 'Rare',
+                                    'bg-green-400/80': product.rarity === 'Super Rare',
+                                    'bg-blue-500/80': product.rarity === 'Secret'
+                                }"
+                                x-text="product.rarity"
+                            ></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Info -->
+                    <div class="flex flex-col justify-center">
+                        <h1 class="hero-text text-4xl md:text-6xl mb-6" x-text="product.title"></h1>
+                        
+                        <div class="flex items-center gap-4 mb-8">
+                            <span class="text-4xl font-black" x-text="formatPrice(product.price)"></span>
+                            <template x-if="product.compare_at_price > product.price">
+                                <span class="text-2xl text-gray-500 line-through" x-text="formatPrice(product.compare_at_price)"></span>
+                            </template>
+                        </div>
+                        
+                        <p class="text-lg text-gray-400 mb-8 leading-relaxed">
+                            Exclusive Labubu collectible from the Macaron Series. Limited edition release with unique design and premium quality. Each piece is carefully curated and authenticated.
+                        </p>
+                        
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold mb-4">DETAILS</h3>
+                            <ul class="space-y-2 text-gray-400">
+                                <li>• Official Labubu collectible</li>
+                                <li>• Limited edition release</li>
+                                <li>• Authenticated and certified</li>
+                                <li>• Premium packaging included</li>
+                                <li>• Worldwide shipping available</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <div class="flex items-center gap-4 bg-white/10 rounded-lg px-4 py-2">
+                                <button @click="quantity > 1 && quantity--" class="text-2xl hover:text-pink-500 transition">−</button>
+                                <span class="text-xl font-bold w-8 text-center" x-text="quantity"></span>
+                                <button @click="quantity++" class="text-2xl hover:text-pink-500 transition">+</button>
+                            </div>
+                            <button 
+                                @click="addToCart()"
+                                class="magnetic-btn flex-1 py-4 bg-gradient-to-r from-pink-500 to-green-400 hover:from-pink-600 hover:to-green-500 rounded-lg font-bold transition-all duration-300 transform hover:scale-105"
+                            >
+                                ADD TO CART
+                            </button>
+                        </div>
+                        
+                        <a href="shop.html" class="mt-6 text-center text-gray-400 hover:text-pink-500 transition">
+                            ← Back to Shop
+                        </a>
+                    </div>
+                </div>
+            </template>
+            
+            <template x-if="!product">
+                <div class="text-center py-20">
+                    <p class="text-2xl text-gray-500">Product not found</p>
+                    <a href="shop.html" class="mt-4 inline-block text-pink-500 hover:text-pink-400">Back to Shop</a>
+                </div>
+            </template>
+        </div>
+    </section>
+    
+    <script>
+        const shopData = [
+            {
+                id: 1,
+                title: "Labubu Exciting Macaron - Lychee Berry",
+                price: 3500,
+                image: "https://placehold.co/600x800/ff69b4/ffffff?text=Lychee+Berry",
+                compare_at_price: 5000,
+                rarity: "Rare",
+                url: "#"
+            },
+            {
+                id: 2,
+                title: "Labubu Exciting Macaron - Green Grape",
+                price: 4500,
+                image: "https://placehold.co/600x800/39ff14/000000?text=Green+Grape",
+                compare_at_price: 0,
+                rarity: "Super Rare",
+                url: "#"
+            },
+            {
+                id: 3,
+                title: "Labubu Exciting Macaron - Sea Salt",
+                price: 5500,
+                image: "https://placehold.co/600x800/00d4ff/000000?text=Sea+Salt",
+                compare_at_price: 0,
+                rarity: "Secret",
+                url: "#"
+            },
+            {
+                id: 4,
+                title: "Labubu Exciting Macaron - Soymilk",
+                price: 3200,
+                image: "https://placehold.co/600x800/ffffff/000000?text=Soymilk",
+                compare_at_price: 4000,
+                rarity: "Rare",
+                url: "#"
+            },
+            {
+                id: 5,
+                title: "Labubu Exciting Macaron - Strawberry",
+                price: 3800,
+                image: "https://placehold.co/600x800/ff1744/ffffff?text=Strawberry",
+                compare_at_price: 0,
+                rarity: "Rare",
+                url: "#"
+            },
+            {
+                id: 6,
+                title: "Labubu Exciting Macaron - Chocolate",
+                price: 4200,
+                image: "https://placehold.co/600x800/8b4513/ffffff?text=Chocolate",
+                compare_at_price: 0,
+                rarity: "Super Rare",
+                url: "#"
+            }
+        ];
+        
+        function productApp() {
+            return {
+                product: null,
+                quantity: 1,
+                cart: JSON.parse(localStorage.getItem('cart') || '[]'),
+                
+                get cartCount() {
+                    return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+                },
+                
+                init() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const productId = parseInt(urlParams.get('id'));
+                    this.product = shopData.find(p => p.id === productId);
+                    
+                    if (this.product) {
+                        gsap.from(".hero-text", {
+                            opacity: 0,
+                            y: 30,
+                            duration: 0.8,
+                            ease: "power3.out"
+                        });
+                    }
+                },
+                
+                formatPrice(cents) {
+                    return `$${(cents / 100).toFixed(2)}`;
+                },
+                
+                addToCart() {
+                    const item = {
+                        ...this.product,
+                        quantity: this.quantity
+                    };
+                    
+                    const existingItem = this.cart.find(c => c.id === item.id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += this.quantity;
+                    } else {
+                        this.cart.push(item);
+                    }
+                    
+                    localStorage.setItem('cart', JSON.stringify(this.cart));
+                    window.location.href = 'cart.html';
+                }
+            };
+        }
+    </script>
+</body>
+</html>
